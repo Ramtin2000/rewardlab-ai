@@ -1,0 +1,24 @@
+[project]
+name = "rewardlab"
+version = "0.1.0"
+description = "A small lab for studying reward hacking in tool-using LLM agents trained with GRPO."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["openai>=1.0", "python-dotenv>=1.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+api = ["fastapi>=0.115", "uvicorn[standard]>=0.30"]
+# Optional LLM call tracing. Off unless LANGFUSE_* keys are set; runs/ stays the source of truth.
+tracing = ["langfuse>=5"]
+# Phase 7 (GRPO) deps go in a `train` extra once we pick the framework and GPU box.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["rewardlab*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

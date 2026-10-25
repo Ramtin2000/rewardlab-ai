@@ -1,0 +1,10 @@
+# The agent model for local runs: Qwen3-4B Instruct (non-thinking) with a context window
+# sized for our episodes. Training uses the same model's HF weights: Qwen/Qwen3-4B-Instruct-2507.
+#
+# Why not plain qwen3:4b: that tag is thinking-only and emits reasoning even with think=false.
+# Why num_ctx: otherwise Ollama may allocate the full 262k context (~42 GB) and crawl.
+# A 10-turn episode is ~3-4k tokens, so 8k leaves headroom.
+#
+# Build:  ollama create rewardlab-qwen3-4b -f backend/ollama/Modelfile
+FROM qwen3:4b-instruct
+PARAMETER num_ctx 8192
