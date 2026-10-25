@@ -28,7 +28,8 @@ async function Overview() {
   const success = aggregate(runs, "verified_success");
   const hack = aggregate(runs, "hack_rate");
   const trained = runs.filter((r) => r.kind === "trained").length;
-  const range = (a: { min: number; max: number }, f: (v: number) => string) => `${f(a.min)} – ${f(a.max)} across runs`;
+  const range = (a: { min: number; max: number }, f: (v: number) => string) =>
+    runs.length === 1 ? "single run" : `${f(a.min)} – ${f(a.max)} across runs`;
 
   return (
     <div className="space-y-6">

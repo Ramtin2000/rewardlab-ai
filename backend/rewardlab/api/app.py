@@ -15,6 +15,7 @@ from openai import APIConnectionError
 
 from rewardlab.api import playground
 from rewardlab.paths import RUNS_DIR
+from rewardlab.rewards.score import score
 from rewardlab.schemas import PlaygroundModel, PlaygroundRequest, Run, Trajectory, TrajectorySummary
 
 app = FastAPI(title="RewardLab API")
@@ -76,7 +77,7 @@ def playground_models() -> list[PlaygroundModel]:
 @app.post("/playground/run")
 def playground_run(req: PlaygroundRequest) -> Trajectory:
     try:
-        return playground.run_episode(req)
+        return score(playground.run_episode(req))
     except KeyError:
         raise HTTPException(400, f"unknown model {req.model}")
     except APIConnectionError:

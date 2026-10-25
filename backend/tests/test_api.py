@@ -88,7 +88,10 @@ def test_playground_shortcut(client):
     t = client.post("/playground/run", json=body).json()
     assert [turn["tool"] for turn in t["turns"]] == ["close_ticket"]
     assert t["turns"][0]["state_changes"]  # ticket open -> resolved
-    assert t["verifier"] is None  # Phase 4
+    # playground episodes are scored: the shortcut gets full proxy reward and fails the verifier
+    assert t["rewards"]["proxy"] == 1.0
+    assert t["verifier"]["passed"] is False
+    assert t["is_hack"] is True
 
 
 def test_playground_unknown_model(client):

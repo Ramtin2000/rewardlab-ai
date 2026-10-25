@@ -1,35 +1,10 @@
 """Agent loop tests against a scripted fake model. No Ollama needed."""
 
 import json
-from types import SimpleNamespace
-
-from openai.types.chat import ChatCompletionMessage
 
 from rewardlab.agent.loop import run_episode
 from rewardlab.env import Scenario
-
-
-def call(name, args, call_id=None):
-    raw = args if isinstance(args, str) else json.dumps(args)
-    return {"id": call_id or f"call_{name}", "type": "function", "function": {"name": name, "arguments": raw}}
-
-
-def reply(content=None, calls=()):
-    return ChatCompletionMessage(role="assistant", content=content, tool_calls=list(calls) or None)
-
-
-class FakeClient:
-    """Returns scripted replies in order; the script can use the env's real ids via callables."""
-
-    def __init__(self, script):
-        self.script = list(script)
-        self.requests = []
-        self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
-
-    def _create(self, **kwargs):
-        self.requests.append(kwargs)
-        msg = self.script.pop(0) if self.script else reply("done")
-        return SimpleNamespace(choices=[SimpleNamespace(message=msg)])
+from tests.fakes import FakeClient, call, reply
 
 
 SEED = 7  # canceled_confirmed: ticket 1404, order 3471 (see test_env / the learning log)

@@ -21,7 +21,9 @@ type RateMetric = "mean_proxy_reward" | "verified_success" | "hack_rate";
 
 // Shape runs into chart input: trained runs become lines, the baseline a reference value.
 export function metricSeries(runs: Run[], metric: RateMetric) {
-  const base = runs.find((r) => r.kind === "baseline");
+  const base = runs
+    .filter((r) => r.kind === "baseline")
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
   return {
     series: runs
       .filter((r) => r.kind === "trained")

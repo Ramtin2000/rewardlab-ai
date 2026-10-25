@@ -28,6 +28,19 @@ export function MetricChart({
   baseline?: { name: string; value: number; color: string };
   className?: string;
 }) {
+  if (series.length === 0) {
+    return (
+      <div className="flex h-56 flex-col items-center justify-center gap-1 text-center text-sm text-muted-foreground">
+        <p>No trained runs yet.</p>
+        {baseline && (
+          <p>
+            Untrained baseline: <span className="font-medium text-foreground">{Math.round(baseline.value * 100)}%</span>
+          </p>
+        )}
+      </div>
+    );
+  }
+
   const config: ChartConfig = Object.fromEntries(series.map((s) => [s.id, { label: s.name, color: s.color }]));
 
   const steps = [...new Set(series.flatMap((s) => s.points.map((p) => p.step)))].sort((a, b) => a - b);
